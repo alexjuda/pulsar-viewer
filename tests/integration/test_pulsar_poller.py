@@ -11,10 +11,6 @@ def _current_timestamp() -> int:
     return int(datetime.now(tz=timezone.utc).timestamp())
 
 
-def _publish_callback(res, msg_id):
-    print("Message published res=%s", res)
-
-
 def _produce(pulsar_url: str, topic: str, msg: dict):
     payload = json.dumps(msg).encode()
 
@@ -23,7 +19,7 @@ def _produce(pulsar_url: str, topic: str, msg: dict):
         topic,
         producer_name="test_pulsar_poller",
     )
-    producer.send_async(payload, _publish_callback)
+    producer.send(payload)
 
 
 class TestReadNewBatch:
@@ -37,7 +33,7 @@ class TestReadNewBatch:
     @staticmethod
     @fixture
     def pulsar_url():
-        return "pulsar://localhost:8080"
+        return "pulsar://localhost:6650"
 
     @staticmethod
     @fixture

@@ -12,6 +12,12 @@ certifi==2024.7.4
     # via pulsar-client
 gbulb==0.6.5
     # via toga-gtk
+iniconfig==2.0.0
+    # via pytest
+packaging==24.1
+    # via pytest
+pluggy==1.5.0
+    # via pytest
 pulsar-client==3.5.0
     # via pulsar-viewer
 pycairo==1.26.1
@@ -20,6 +26,7 @@ pycairo==1.26.1
 pygobject==3.48.2
     # via gbulb
     # via toga-gtk
+pytest==8.3.2
 toga==0.4.5
     # via pulsar-viewer
 toga-core==0.4.5

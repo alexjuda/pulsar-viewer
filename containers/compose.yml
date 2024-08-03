@@ -14,9 +14,9 @@ services:
 
   pulsar-init:
     image: docker.io/apachepulsar/pulsar:3.3.0
-    command: ["bash", "/app/setup_configs.sh"]
+    command: ["bash", "/app/setup_topics.sh"]
     volumes:
-      - "./setup_configs.sh:/app/setup_configs.sh:z"
+      - "./setup_topics.sh:/app/setup_topics.sh:z"
     depends_on:
       pulsar_1:
         condition: service_healthy

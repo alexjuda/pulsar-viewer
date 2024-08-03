@@ -24,19 +24,19 @@ def _produce(pulsar_url: str, topic: str, msg: dict):
 
 class TestReadNewBatch:
     @staticmethod
-    @fixture
+    @fixture(scope="class")
     def topic():
         timestamp = _current_timestamp()
         topic = f"persistent://tests/integration/test_pulsar_poller-{timestamp}"
         return topic
 
     @staticmethod
-    @fixture
+    @fixture(scope="class")
     def pulsar_url():
         return "pulsar://localhost:6650"
 
     @staticmethod
-    @fixture
+    @fixture(scope="class")
     def poller(pulsar_url: str, topic: str):
         return PulsarPoller(
             pulsar_url=pulsar_url,
@@ -61,3 +61,10 @@ class TestReadNewBatch:
 
         assert batch is not None
         assert len(batch) == 2
+
+    @staticmethod
+    @pytest.mark.dependency(depends=["TestReadNewBatch::test_reading_after_sending"])
+    def test_no_new_data(poller: PulsarPoller):
+        batch = poller.read_new_batch()
+
+        assert batch is None

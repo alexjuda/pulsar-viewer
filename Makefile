@@ -8,16 +8,12 @@ test-all:
 	$(MAKE) test-integration
 
 
-.PHONY: test-integration
-test-integration:
-	$(MAKE) -C containers up
-	$(MAKE) test-integration-pytest
-
-
 PYTEST := rye run pytest
 PYTEST_FLAGS := -vv
 
 
-.PHONY: test-integration-pytest
-test-integration-pytest:
+# Requires starting the Pulsar container first:
+# make -C containers up
+.PHONY: test-integration
+test-integration:
 	$(PYTEST) $(PYTEST_FLAGS) tests/integration

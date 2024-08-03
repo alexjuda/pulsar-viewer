@@ -44,19 +44,20 @@ class TestReadNewBatch:
         )
 
     @staticmethod
-    @pytest.mark.dependency
+    @pytest.mark.dependency()
     def test_empty_topic(poller: PulsarPoller):
         batch = poller.read_new_batch()
 
         assert batch is None
 
     @staticmethod
-    @pytest.mark.dependency(depends=["test_with_empty_topic"])
+    @pytest.mark.dependency(depends=["TestReadNewBatch::test_empty_topic"])
     def test_reading_after_sending(pulsar_url: str, topic: str, poller: PulsarPoller):
         msg = {"hello": "world!"}
+        _produce(pulsar_url=pulsar_url, topic=topic, msg=msg)
         _produce(pulsar_url=pulsar_url, topic=topic, msg=msg)
 
         batch = poller.read_new_batch()
 
         assert batch is not None
-        assert len(batch) == 1
+        assert len(batch) == 2

@@ -19,13 +19,14 @@ class PulsarPoller:
             start_message_id=pulsar.MessageId.earliest,
         )
 
-    TIMEOUT_IMMEDIATELY = 0
+    # 1 millisecond
+    TIMEOUT_IMMEDIATELY = 1
 
     def read_new_batch(self) -> list[Message] | None:
         msgs = []
         while True:
             try:
-                msg = self.reader.read_next(timeout_millis=1000)
+                msg = self.reader.read_next(timeout_millis=self.TIMEOUT_IMMEDIATELY)
             except pulsar.Timeout:
                 break
             msgs.append(msg)

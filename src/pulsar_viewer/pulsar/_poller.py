@@ -22,7 +22,7 @@ class PulsarPoller:
     # 1 millisecond
     TIMEOUT_IMMEDIATELY = 1
 
-    def read_new_batch(self) -> list[Message] | None:
+    def read_new_batch(self) -> list[Message]:
         msgs = []
         while True:
             try:
@@ -31,7 +31,4 @@ class PulsarPoller:
                 break
             msgs.append(msg)
 
-        if msgs:
-            return msgs
-        else:
-            return None
+        return msgs

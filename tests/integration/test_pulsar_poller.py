@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from pulsar_viewer.pulsar import PulsarPoller
 import json
+import time
 
 import pytest
 from pytest import fixture
@@ -48,7 +49,7 @@ class TestReadNewBatch:
     def test_empty_topic(poller: PulsarPoller):
         batch = poller.read_new_batch()
 
-        assert batch is None
+        assert batch == []
 
     @staticmethod
     @pytest.mark.dependency(depends=["TestReadNewBatch::test_empty_topic"])
@@ -57,9 +58,11 @@ class TestReadNewBatch:
         _produce(pulsar_url=pulsar_url, topic=topic, msg=msg)
         _produce(pulsar_url=pulsar_url, topic=topic, msg=msg)
 
+        # Give Pulsar some time to ingest the data
+        time.sleep(0.5)
+
         batch = poller.read_new_batch()
 
-        assert batch is not None
         assert len(batch) == 2
 
     @staticmethod
@@ -67,4 +70,4 @@ class TestReadNewBatch:
     def test_no_new_data(poller: PulsarPoller):
         batch = poller.read_new_batch()
 
-        assert batch is None
+        assert batch == []

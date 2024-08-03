@@ -1,20 +1,66 @@
 from datetime import datetime, timezone
 from pulsar_viewer.pulsar import PulsarPoller
+import json
+
+import pytest
+from pytest import fixture
+import pulsar
 
 
 def _current_timestamp() -> int:
     return int(datetime.now(tz=timezone.utc).timestamp())
 
 
+def _publish_callback(res, msg_id):
+    print("Message published res=%s", res)
+
+
+def _produce(pulsar_url: str, topic: str, msg: dict):
+    payload = json.dumps(msg).encode()
+
+    client = pulsar.Client(pulsar_url)
+    producer = client.create_producer(
+        topic,
+        producer_name="test_pulsar_poller",
+    )
+    producer.send_async(payload, _publish_callback)
+
+
 class TestReadNewBatch:
     @staticmethod
-    def test_with_empty_topic():
+    @fixture
+    def topic():
         timestamp = _current_timestamp()
-        topic = f"persistent://tests/integration/test1-{timestamp}"
+        topic = f"persistent://tests/integration/test_pulsar_poller-{timestamp}"
+        return topic
 
-        poller = PulsarPoller(
-            pulsar_url="pulsar://localhost:8080",
+    @staticmethod
+    @fixture
+    def pulsar_url():
+        return "pulsar://localhost:8080"
+
+    @staticmethod
+    @fixture
+    def poller(pulsar_url: str, topic: str):
+        return PulsarPoller(
+            pulsar_url=pulsar_url,
             topic_fq=topic,
         )
+
+    @staticmethod
+    @pytest.mark.dependency
+    def test_empty_topic(poller: PulsarPoller):
         batch = poller.read_new_batch()
+
         assert batch is None
+
+    @staticmethod
+    @pytest.mark.dependency(depends=["test_with_empty_topic"])
+    def test_reading_after_sending(pulsar_url: str, topic: str, poller: PulsarPoller):
+        msg = {"hello": "world!"}
+        _produce(pulsar_url=pulsar_url, topic=topic, msg=msg)
+
+        batch = poller.read_new_batch()
+
+        assert batch is not None
+        assert len(batch) == 1

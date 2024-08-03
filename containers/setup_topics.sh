@@ -9,6 +9,9 @@ ADMIN_URL="http://pulsar:8080"
 # workaround for flaky cluster healthcheck
 sleep 5
 
+# Create the tenant.
+bin/pulsar-admin --admin-url $ADMIN_URL tenants create $TENANT
+
 # Create the namespace.
 # Prevents reader errors when there are no messages.
 bin/pulsar-admin --admin-url $ADMIN_URL namespaces create $TENANT/$NS

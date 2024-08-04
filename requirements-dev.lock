@@ -10,6 +10,8 @@
 -e file:.
 certifi==2024.7.4
     # via pulsar-client
+click==8.1.7
+    # via pulsar-viewer
 gbulb==0.6.5
     # via toga-gtk
 iniconfig==2.0.0

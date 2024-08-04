@@ -25,12 +25,12 @@ class MainWindowVM:
         self._poller = poller
 
     @classmethod
-    def standard(cls):
+    def standard(cls, pulsar_url: str, topic_fq: str):
         return cls(
             # TODO: figure out how to configure these
             poller=PulsarPoller(
-                pulsar_url="pulsar://localhost:6650",
-                topic_fq="persistent://public/default/hello1",
+                pulsar_url=pulsar_url,
+                topic_fq=topic_fq,
             )
         )
 

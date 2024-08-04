@@ -12,11 +12,13 @@ from ._async_mocker import AsyncMocker, trigger_coro
 class TestMainWindowVM:
     @staticmethod
     def test_factory():
-        vm = MainWindowVM.standard()
+        vm = MainWindowVM.standard(pulsar_url=":url:", topic_fq=":topic:")
 
         assert vm is not None
         assert vm._delegate is None
         assert isinstance(vm._poller, PulsarPoller)
+        assert vm.pulsar_url == ":url:"
+        assert vm.topic_fq == ":topic:"
 
     @staticmethod
     def test_initial_rows():

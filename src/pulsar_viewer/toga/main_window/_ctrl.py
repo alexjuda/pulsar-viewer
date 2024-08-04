@@ -18,8 +18,8 @@ class MainWindowCtrl:
         self._vm = vm
 
     @classmethod
-    def standard(cls):
-        vm = MainWindowVM.standard()
+    def standard(cls, pulsar_url: str, topic_fq: str):
+        vm = MainWindowVM.standard(pulsar_url=pulsar_url, topic_fq=topic_fq)
         ctrl = cls(vm=vm)
         vm.register_delegate(ctrl)
         return ctrl

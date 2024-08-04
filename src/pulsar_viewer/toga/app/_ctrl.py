@@ -7,8 +7,12 @@ class AppCtrl:
         self._main_window_ctrl = main_window_ctrl
 
     @classmethod
-    def standard(cls):
-        return cls(main_window_ctrl=MainWindowCtrl.standard())
+    def standard(cls, pulsar_url: str, topic_fq: str):
+        return cls(
+            main_window_ctrl=MainWindowCtrl.standard(
+                pulsar_url=pulsar_url, topic_fq=topic_fq
+            )
+        )
 
     def startup(self, app: toga.App, **kwargs) -> toga.Widget:
         """

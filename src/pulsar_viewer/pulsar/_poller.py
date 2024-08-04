@@ -1,6 +1,8 @@
-import pulsar
-from ._msg import Message
 from functools import cached_property
+
+import pulsar
+
+from ._msg import Message
 
 
 class PulsarPoller:

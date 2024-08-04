@@ -44,7 +44,16 @@ class PulsarPoller:
                 )
             except pulsar.Timeout:
                 break
-            msg = Message(payload=pulsar_message.data())
+            msg_id = pulsar_message.message_id()
+            msg = Message(
+                payload=pulsar_message.data(),
+                id=Message.ID(
+                    partition=msg_id.partition(),
+                    ledger_id=msg_id.ledger_id(),
+                    entry_id=msg_id.entry_id(),
+                    batch_index=msg_id.batch_index(),
+                ),
+            )
             msgs.append(msg)
 
         return msgs

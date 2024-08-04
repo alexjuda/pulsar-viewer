@@ -67,6 +67,12 @@ class TestReadNewBatch:
         for read_msg in batch:
             assert json.loads(read_msg.payload.decode()) == msg
 
+            assert read_msg.id is not None
+            # The default values are -1. Looks like Pulsar starts the indices
+            # with 0.
+            assert read_msg.id.ledger_id >= 0
+            assert read_msg.id.entry_id >= 0
+
     @staticmethod
     @pytest.mark.dependency(depends=["TestReadNewBatch::test_reading_after_sending"])
     def test_no_new_data(poller: PulsarPoller):

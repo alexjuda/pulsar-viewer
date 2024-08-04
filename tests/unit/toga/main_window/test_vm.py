@@ -9,6 +9,13 @@ from pulsar_viewer.pulsar import PulsarPoller, Message
 from ._async_mocker import AsyncMocker, trigger_coro
 
 
+def _example_message(message_i: int):
+    return Message(
+        payload=b"m" + str(message_i).encode(),
+        id=Message.ID(partition=-1, batch_index=-1, ledger_id=0, entry_id=message_i),
+    )
+
+
 class TestMainWindowVM:
     @staticmethod
     def test_factory():
@@ -25,8 +32,8 @@ class TestMainWindowVM:
         # Given
         poller_mock = create_autospec(PulsarPoller)
         poller_mock.read_new_batch.return_value = [
-            Message(payload=b"m1"),
-            Message(payload=b"m2"),
+            _example_message(1),
+            _example_message(2),
         ]
         vm = MainWindowVM(poller=poller_mock)
 
@@ -78,8 +85,8 @@ class TestMainWindowVM:
             # Given
             sleep_counter = 0
             poller_mock.read_new_batch.return_value = [
-                Message(payload=b"m1"),
-                Message(payload=b"m2"),
+                _example_message(1),
+                _example_message(2),
             ]
 
             def _sleep_callback():
@@ -87,8 +94,8 @@ class TestMainWindowVM:
 
                 if sleep_counter == 0:
                     poller_mock.read_new_batch.return_value = [
-                        Message(payload=b"m3"),
-                        Message(payload=b"m4"),
+                        _example_message(3),
+                        _example_message(4),
                     ]
                 else:
                     vm._should_continue_polling = False

@@ -5,6 +5,7 @@ nop:
 
 .PHONY: test-all
 test-all:
+	$(MAKE) test-unit
 	$(MAKE) test-integration
 
 
@@ -17,3 +18,8 @@ PYTEST_FLAGS := -vv
 .PHONY: test-integration
 test-integration:
 	$(PYTEST) $(PYTEST_FLAGS) tests/integration
+
+
+.PHONY: test-unit
+test-unit:
+	$(PYTEST) $(PYTEST_FLAGS) tests/unit

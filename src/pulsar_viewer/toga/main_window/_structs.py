@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+from typing import NamedTuple
 
 
-@dataclass
-class Message:
-    payload: str
+class MessageRow(NamedTuple):
+    title: str
+    subtitle: str

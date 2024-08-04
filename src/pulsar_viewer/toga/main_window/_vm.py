@@ -1,5 +1,5 @@
 from typing import Protocol
-from ._structs import Message
+from ._structs import MessageRow
 
 
 class MainWindowVM:
@@ -8,9 +8,8 @@ class MainWindowVM:
     """
 
     class Delegate(Protocol):
-        def prepend_messages(self, messages: list[Message]): ...
-
-        def append_messages(self, messages: list[Message]): ...
+        def prepend_rows(self, rows: list[MessageRow]): ...
+        def append_rows(self, rows: list[MessageRow]): ...
 
     _delegate: Delegate | None = None
 
@@ -20,3 +19,11 @@ class MainWindowVM:
 
     def register_delegate(self, delegate: Delegate):
         self._delegate = delegate
+
+    @property
+    def initial_rows(self) -> list[MessageRow]:
+        return [
+            MessageRow(title="A Title 1", subtitle="This is a subtitle."),
+            MessageRow(title="A Title 2", subtitle="This is a subtitle."),
+            MessageRow(title="A Title 3", subtitle="This is a subtitle."),
+        ]

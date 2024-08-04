@@ -1,8 +1,9 @@
 import toga
+import toga.sources
 import toga.style
 
 from ._vm import MainWindowVM
-from ._structs import Message
+from ._structs import MessageRow
 
 
 class MainWindowCtrl:
@@ -18,9 +19,14 @@ class MainWindowCtrl:
 
     @property
     def widget(self) -> toga.Widget:
-        messages_view = toga.Label("Messages\nwill\nshow up here.")
+        data_source = toga.sources.ListSource(
+            accessors=MessageRow._fields,
+            data=self._vm.initial_rows,
+        )
+        messages_view = toga.DetailedList(data=data_source)
+
         return messages_view
 
-    def prepend_messages(self, messages: list[Message]): ...
+    def prepend_rows(self, rows: list[MessageRow]): ...
 
-    def append_messages(self, messages: list[Message]): ...
+    def append_rows(self, rows: list[MessageRow]): ...

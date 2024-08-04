@@ -38,6 +38,14 @@ class MainWindowVM:
         self._delegate = delegate
 
     @property
+    def pulsar_url(self) -> str:
+        return self._poller.pulsar_url
+
+    @property
+    def topic_fq(self) -> str:
+        return self._poller.topic_fq
+
+    @property
     def initial_rows(self) -> list[MessageRow]:
         messages = self._poller.read_new_batch()
 

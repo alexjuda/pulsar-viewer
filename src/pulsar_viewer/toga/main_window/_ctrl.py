@@ -13,6 +13,7 @@ class MainWindowCtrl:
     Main Window's Controller. Glue code between toga and the View Model. Allows
     the View Model to encapsulate the logic without the dependence on toga.
     """
+
     def __init__(self, vm: MainWindowVM):
         self._vm = vm
 
@@ -39,12 +40,19 @@ class MainWindowCtrl:
 
     @property
     def widget(self) -> toga.Widget:
+        url_label = toga.Label(text=f"Pulsar URL: {self._vm.pulsar_url}")
+        topic_label = toga.Label(text=f"Topic: {self._vm.topic_fq}")
         messages_view = toga.DetailedList(
             data=self.data_source,
             on_refresh=self._on_refresh,
+            style=toga.style.Pack(flex=1),
+        )
+        vertical_box = toga.Box(
+            children=[url_label, topic_label, messages_view],
+            style=toga.style.Pack(direction="column"),
         )
 
-        return messages_view
+        return vertical_box
 
     def _on_refresh(self, widget: toga.DetailedList, **kwargs):
         self._vm.on_refresh()

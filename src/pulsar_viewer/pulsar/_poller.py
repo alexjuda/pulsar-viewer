@@ -8,6 +8,14 @@ class PulsarPoller:
         self._pulsar_url = pulsar_url
         self._topic_fq = topic_fq
 
+    @property
+    def pulsar_url(self) -> str:
+        return self._pulsar_url
+
+    @property
+    def topic_fq(self) -> str:
+        return self._topic_fq
+
     @cached_property
     def client(self):
         return pulsar.Client(service_url=self._pulsar_url)

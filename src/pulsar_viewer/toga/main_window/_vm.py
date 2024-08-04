@@ -17,8 +17,6 @@ class MainWindowVM:
     _delegate: Delegate | None = None
     # This will get removed soon. It's just to demo the refresh mechanics.
     _refresh_counter: int = 0
-    # This will get removed soon. It's just to demo the polling mechanics.
-    _poll_counter: int = 0
 
     # Allows breaking the loop during testing.
     _should_continue_polling: bool = True

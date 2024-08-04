@@ -2,6 +2,8 @@
 
 A simple desktop app for previewing the contents of Pulsar topics. Pulsar Viewer is a native, desktop app written in Python, powered by [toga](https://toga.readthedocs.io/en/stable/).
 
+![Sample](docs/sample.png)
+
 # Installation
 
 With [pipx](https://github.com/pypa/pipx):

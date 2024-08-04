@@ -1,6 +1,6 @@
 import toga
 
-from ._app_controller import AppController
+from .app import AppController
 
 
 def main():

@@ -15,19 +15,19 @@ class TestMainWindowVM:
 
     @staticmethod
     def test_polling_loop():
-        mock_sleep = AsyncMock()
+        # Given
+        poller_mock = create_autospec(PulsarPoller)
+        vm = MainWindowVM(poller=poller_mock)
 
-        with patch.object(asyncio, "sleep", mock_sleep):
-            # Given
-            poller_mock = create_autospec(PulsarPoller)
-            delegate_spy = create_autospec(MainWindowVM.Delegate)
-            vm = MainWindowVM(poller=poller_mock)
-            vm.register_delegate(delegate_spy)
+        delegate_spy = create_autospec(MainWindowVM.Delegate)
+        vm.register_delegate(delegate_spy)
 
-            def _stop_loop(*args, **kwargs):
+        with patch.object(asyncio, "sleep", AsyncMock()) as mock_sleep:
+
+            def _await_sleep_callback(*args, **kwargs):
                 vm._should_continue_polling = False
 
-            mock_sleep.side_effect = _stop_loop
+            mock_sleep.side_effect = _await_sleep_callback
 
             # When
             coro = vm.polling_loop()
@@ -36,5 +36,5 @@ class TestMainWindowVM:
             except StopIteration:
                 pass
 
-            # Then
-            delegate_spy.append_rows.assert_called_once()
+        # Then
+        delegate_spy.append_rows.assert_called_once()

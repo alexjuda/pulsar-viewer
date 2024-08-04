@@ -9,6 +9,10 @@ from ._structs import MessageRow
 
 
 class MainWindowCtrl:
+    """
+    Main Window's Controller. Glue code between toga and the View Model. Allows
+    the View Model to encapsulate the logic without the dependence on toga.
+    """
     def __init__(self, vm: MainWindowVM):
         self._vm = vm
 
@@ -18,6 +22,13 @@ class MainWindowCtrl:
         ctrl = cls(vm=vm)
         vm.register_delegate(ctrl)
         return ctrl
+
+    @property
+    def background_tasks(self) -> list:
+        return [self._polling_background_task]
+
+    async def _polling_background_task(self, app: toga.App, **kwargs):
+        await self._vm.polling_loop()
 
     @cached_property
     def data_source(self) -> toga.sources.ListSource:
@@ -42,4 +53,6 @@ class MainWindowCtrl:
         for row in rows[::-1]:
             self.data_source.insert(0, row)
 
-    def append_rows(self, rows: list[MessageRow]): ...
+    def append_rows(self, rows: list[MessageRow]):
+        for row in rows:
+            self.data_source.append(row)

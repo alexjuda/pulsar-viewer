@@ -15,3 +15,7 @@ class AppCtrl:
         Matches `toga.app.AppStartupMethod`. Returns content of the main window.
         """
         return self._main_window_ctrl.widget
+
+    @property
+    def background_tasks(self) -> list:
+        return self._main_window_ctrl.background_tasks

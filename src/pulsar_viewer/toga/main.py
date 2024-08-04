@@ -10,6 +10,10 @@ def main():
         app_id="com.alexjuda.pulsarviewer",
         startup=app_controller.startup,
     )
+
+    for task in app_controller.background_tasks:
+        app.add_background_task(task)
+
     app.main_loop()
 
 

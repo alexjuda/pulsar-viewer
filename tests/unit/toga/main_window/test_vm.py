@@ -1,7 +1,10 @@
-from unittest.mock import create_autospec, patch, AsyncMock
+import asyncio
+from unittest.mock import create_autospec
+
 from pulsar_viewer.toga.main_window._vm import MainWindowVM
 from pulsar_viewer.pulsar import PulsarPoller
-import asyncio
+
+from ._async_mocker import AsyncMocker, trigger_coro
 
 
 class TestMainWindowVM:
@@ -22,19 +25,15 @@ class TestMainWindowVM:
         delegate_spy = create_autospec(MainWindowVM.Delegate)
         vm.register_delegate(delegate_spy)
 
-        with patch.object(asyncio, "sleep", AsyncMock()) as mock_sleep:
+        def _sleep_callback():
+            vm._should_continue_polling = False
 
-            def _await_sleep_callback(*args, **kwargs):
-                vm._should_continue_polling = False
+        sleep_mocker = AsyncMocker(asyncio, "sleep", on_await=_sleep_callback)
 
-            mock_sleep.side_effect = _await_sleep_callback
-
+        with sleep_mocker:
             # When
             coro = vm.polling_loop()
-            try:
-                coro.send(None)
-            except StopIteration:
-                pass
+            trigger_coro(coro)
 
         # Then
         delegate_spy.append_rows.assert_called_once()

@@ -1,4 +1,5 @@
 import toga
+import toga.style
 
 from ._vm import MainWindowVM
 
@@ -9,7 +10,10 @@ class MainWindowCtrl:
 
         self._switch = toga.Switch(text="a switch")
         self._messages_view = toga.Label("Messages\nwill\nshow up here.")
-        self._box = toga.Box(children=[self._switch, self._messages_view])
+        self._box = toga.Box(
+            children=[self._switch, self._messages_view],
+            style=toga.style.Pack(direction="column"),
+        )
 
     @classmethod
     def standard(cls):

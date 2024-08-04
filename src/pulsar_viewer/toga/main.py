@@ -1,10 +1,10 @@
 import toga
 
-from .app import AppController
+from .app import AppCtrl
 
 
 def main():
-    app_controller = AppController()
+    app_controller = AppCtrl.standard()
     app = toga.App(
         formal_name="Pulsar Viewer",
         app_id="com.alexjuda.pulsarviewer",

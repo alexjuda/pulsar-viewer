@@ -15,8 +15,6 @@ class MainWindowVM:
         def append_rows(self, rows: list[MessageRow]): ...
 
     _delegate: Delegate | None = None
-    # This will get removed soon. It's just to demo the refresh mechanics.
-    _refresh_counter: int = 0
 
     # Allows breaking the loop during testing.
     _should_continue_polling: bool = True
@@ -57,19 +55,6 @@ class MainWindowVM:
             title=f"Ledger {msg.id.ledger_id}, Entry {msg.id.entry_id}",
             subtitle=msg.payload.decode(),
         )
-
-    def on_refresh(self):
-        self._refresh_counter += 1
-
-        if delegate := self._delegate:
-            delegate.prepend_rows(
-                [
-                    MessageRow(
-                        title=f"Refresh {self._refresh_counter}",
-                        subtitle="This row was lazy loaded.",
-                    ),
-                ]
-            )
 
     async def polling_loop(self):
         while self._should_continue_polling:

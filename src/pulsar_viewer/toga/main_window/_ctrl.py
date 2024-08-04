@@ -44,7 +44,6 @@ class MainWindowCtrl:
         topic_label = toga.Label(text=f"Topic: {self._vm.topic_fq}")
         messages_view = toga.DetailedList(
             data=self.data_source,
-            on_refresh=self._on_refresh,
             style=toga.style.Pack(flex=1),
         )
         vertical_box = toga.Box(
@@ -53,9 +52,6 @@ class MainWindowCtrl:
         )
 
         return vertical_box
-
-    def _on_refresh(self, widget: toga.DetailedList, **kwargs):
-        self._vm.on_refresh()
 
     def prepend_rows(self, rows: list[MessageRow]):
         for row in rows[::-1]:

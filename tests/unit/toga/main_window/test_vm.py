@@ -42,7 +42,11 @@ class TestMainWindowVM:
 
         # Then
         assert len(rows) == 2
+
+        assert rows[0].title == "Ledger 0, Entry 1"
         assert rows[0].subtitle == "m1"
+
+        assert rows[1].title == "Ledger 0, Entry 2"
         assert rows[1].subtitle == "m2"
 
     class TestPollingLoop:
@@ -117,11 +121,17 @@ class TestMainWindowVM:
             batch1: list[MessageRow] = delegate_spy.append_rows.call_args_list[0].args[
                 0
             ]
+            assert batch1[0].title == "Ledger 0, Entry 1"
             assert batch1[0].subtitle == "m1"
+
+            assert batch1[1].title == "Ledger 0, Entry 2"
             assert batch1[1].subtitle == "m2"
 
             batch2: list[MessageRow] = delegate_spy.append_rows.call_args_list[1].args[
                 0
             ]
+            assert batch2[0].title == "Ledger 0, Entry 3"
             assert batch2[0].subtitle == "m3"
+
+            assert batch2[1].title == "Ledger 0, Entry 4"
             assert batch2[1].subtitle == "m4"

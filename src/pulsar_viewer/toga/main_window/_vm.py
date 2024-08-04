@@ -2,7 +2,7 @@ import asyncio
 from typing import Protocol
 
 from ._structs import MessageRow
-from ...pulsar import PulsarPoller
+from ...pulsar import PulsarPoller, Message
 
 
 class MainWindowVM:
@@ -49,10 +49,14 @@ class MainWindowVM:
     def initial_rows(self) -> list[MessageRow]:
         messages = self._poller.read_new_batch()
 
-        return [
-            MessageRow(title="Message X", subtitle=msg.payload.decode())
-            for msg in messages
-        ]
+        return [self._message_to_row(msg) for msg in messages]
+
+    @staticmethod
+    def _message_to_row(msg: Message) -> MessageRow:
+        return MessageRow(
+            title=f"Ledger {msg.id.ledger_id}, Entry {msg.id.entry_id}",
+            subtitle=msg.payload.decode(),
+        )
 
     def on_refresh(self):
         self._refresh_counter += 1
@@ -73,13 +77,7 @@ class MainWindowVM:
                 continue
 
             new_batch = self._poller.read_new_batch()
-            new_rows = [
-                MessageRow(
-                    title="Added message",
-                    subtitle=msg.payload.decode(),
-                )
-                for msg in new_batch
-            ]
+            new_rows = [self._message_to_row(msg) for msg in new_batch]
             self._delegate.append_rows(new_rows)
 
             await asyncio.sleep(1)

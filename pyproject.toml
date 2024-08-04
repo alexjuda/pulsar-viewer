@@ -12,6 +12,7 @@ dependencies = [
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
+license = { text = "Apache-2.0" }
 
 [project.scripts]
 "pulsar-viewer" = "pulsar_viewer.toga.main:cli_main"

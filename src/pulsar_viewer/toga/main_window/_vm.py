@@ -1,6 +1,8 @@
 import asyncio
 from typing import Protocol
+
 from ._structs import MessageRow
+from ...pulsar import PulsarPoller
 
 
 class MainWindowVM:
@@ -18,19 +20,29 @@ class MainWindowVM:
     # This will get removed soon. It's just to demo the polling mechanics.
     _poll_counter: int = 0
 
+    def __init__(self, poller: PulsarPoller):
+        self._poller = poller
+
     @classmethod
     def standard(cls):
-        return cls()
+        return cls(
+            # TODO: figure out how to configure these
+            poller=PulsarPoller(
+                pulsar_url="pulsar://localhost:6650",
+                topic_fq="persistent://public/default/hello1",
+            )
+        )
 
     def register_delegate(self, delegate: Delegate):
         self._delegate = delegate
 
     @property
     def initial_rows(self) -> list[MessageRow]:
+        messages = self._poller.read_new_batch()
+
         return [
-            MessageRow(title="A Title 1", subtitle="This is a subtitle."),
-            MessageRow(title="A Title 2", subtitle="This is a subtitle."),
-            MessageRow(title="A Title 3", subtitle="This is a subtitle."),
+            MessageRow(title="Message X", subtitle=msg.payload.decode())
+            for msg in messages
         ]
 
     def on_refresh(self):
@@ -48,15 +60,17 @@ class MainWindowVM:
 
     async def polling_loop(self):
         while True:
-            self._poll_counter += 1
-            if delegate := self._delegate:
-                delegate.append_rows(
-                    [
-                        MessageRow(
-                            title=f"Poll number {self._poll_counter}",
-                            subtitle="This row was dynamically added.",
-                        ),
-                    ]
+            if self._delegate is None:
+                continue
+
+            new_batch = self._poller.read_new_batch()
+            new_rows = [
+                MessageRow(
+                    title="Added message",
+                    subtitle=msg.payload.decode(),
                 )
+                for msg in new_batch
+            ]
+            self._delegate.append_rows(new_rows)
 
             await asyncio.sleep(1)

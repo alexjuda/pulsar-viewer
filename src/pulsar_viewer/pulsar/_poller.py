@@ -26,9 +26,10 @@ class PulsarPoller:
         msgs = []
         while True:
             try:
-                msg = self.reader.read_next(timeout_millis=self.TIMEOUT_IMMEDIATELY)
+                pulsar_message = self.reader.read_next(timeout_millis=self.TIMEOUT_IMMEDIATELY)
             except pulsar.Timeout:
                 break
+            msg = Message(payload=pulsar_message.data())
             msgs.append(msg)
 
         return msgs

@@ -64,6 +64,8 @@ class TestReadNewBatch:
         batch = poller.read_new_batch()
 
         assert len(batch) == 2
+        for read_msg in batch:
+            assert json.loads(read_msg.payload.decode()) == msg
 
     @staticmethod
     @pytest.mark.dependency(depends=["TestReadNewBatch::test_reading_after_sending"])

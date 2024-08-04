@@ -18,6 +18,24 @@ class TestMainWindowVM:
         assert vm._delegate is None
         assert isinstance(vm._poller, PulsarPoller)
 
+    @staticmethod
+    def test_initial_rows():
+        # Given
+        poller_mock = create_autospec(PulsarPoller)
+        poller_mock.read_new_batch.return_value = [
+            Message(payload=b"m1"),
+            Message(payload=b"m2"),
+        ]
+        vm = MainWindowVM(poller=poller_mock)
+
+        # When
+        rows = vm.initial_rows
+
+        # Then
+        assert len(rows) == 2
+        assert rows[0].subtitle == "m1"
+        assert rows[1].subtitle == "m2"
+
     class TestPollingLoop:
         @fixture
         @staticmethod
@@ -87,10 +105,14 @@ class TestMainWindowVM:
                 len(delegate_spy.append_rows.call_args_list) == 2
             ), "Invalid number of batches"
 
-            batch1: list[MessageRow] = delegate_spy.append_rows.call_args_list[0].args[0]
+            batch1: list[MessageRow] = delegate_spy.append_rows.call_args_list[0].args[
+                0
+            ]
             assert batch1[0].subtitle == "m1"
             assert batch1[1].subtitle == "m2"
 
-            batch2: list[MessageRow] = delegate_spy.append_rows.call_args_list[1].args[0]
+            batch2: list[MessageRow] = delegate_spy.append_rows.call_args_list[1].args[
+                0
+            ]
             assert batch2[0].subtitle == "m3"
             assert batch2[1].subtitle == "m4"

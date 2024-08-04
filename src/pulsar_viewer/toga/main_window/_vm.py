@@ -20,6 +20,9 @@ class MainWindowVM:
     # This will get removed soon. It's just to demo the polling mechanics.
     _poll_counter: int = 0
 
+    # Allows breaking the loop during testing.
+    _should_continue_polling: bool = True
+
     def __init__(self, poller: PulsarPoller):
         self._poller = poller
 
@@ -59,7 +62,7 @@ class MainWindowVM:
             )
 
     async def polling_loop(self):
-        while True:
+        while self._should_continue_polling:
             if self._delegate is None:
                 continue
 

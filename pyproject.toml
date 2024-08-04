@@ -8,12 +8,13 @@ authors = [
 dependencies = [
     "pulsar-client>=3.5.0",
     "toga>=0.4.5",
+    "click>=8.1.7",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
 
 [project.scripts]
-"pulsar-viewer" = "pulsar_viewer:main"
+"pulsar-viewer" = "pulsar_viewer.toga.main:cli_main"
 
 [build-system]
 requires = ["hatchling"]
@@ -21,7 +22,10 @@ build-backend = "hatchling.build"
 
 [tool.rye]
 managed = true
-dev-dependencies = []
+dev-dependencies = [
+    "pytest>=8.3.2",
+    "pytest-dependency>=0.6.0",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true

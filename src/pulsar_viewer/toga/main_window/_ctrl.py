@@ -8,10 +8,15 @@ class MainWindowCtrl:
     def __init__(self, vm: MainWindowVM):
         self._vm = vm
 
-        self._switch = toga.Switch(text="a switch")
-        self._messages_view = toga.Label("Messages\nwill\nshow up here.")
+        switch = toga.Switch(text="Show full message")
+        # Wrapping the switch in a box makes the control and the label clumped
+        # together instead of stretched to till the container.
+        switch_box = toga.Box(children=[switch])
+
+        messages_view = toga.Label("Messages\nwill\nshow up here.")
+
         self._box = toga.Box(
-            children=[self._switch, self._messages_view],
+            children=[switch_box, messages_view],
             style=toga.style.Pack(direction="column"),
         )
 

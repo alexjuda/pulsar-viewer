@@ -14,9 +14,11 @@ class MainWindowCtrl:
         switch_box = toga.Box(children=[switch])
 
         messages_view = toga.Label("Messages\nwill\nshow up here.")
+        message_details_view = toga.Label("This will contain\nthe message at its full length.")
+        split = toga.SplitContainer(content=(messages_view, message_details_view))
 
         self._box = toga.Box(
-            children=[switch_box, messages_view],
+            children=[switch_box, split],
             style=toga.style.Pack(direction="column"),
         )
 

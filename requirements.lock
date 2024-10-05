@@ -5,28 +5,19 @@
 #   pre: false
 #   features: []
 #   all-features: false
-#   with-sources: false
+#   with-sources: true
+#   generate-hashes: false
+#   universal: false
+
+--index-url https://pypi.org/simple/
 
 -e file:.
-certifi==2024.7.4
-    # via pulsar-client
+certifi==2024.8.30
 click==8.1.7
-    # via pulsar-viewer
-gbulb==0.6.5
-    # via toga-gtk
 pulsar-client==3.5.0
-    # via pulsar-viewer
-pycairo==1.26.1
-    # via pygobject
-    # via toga-gtk
-pygobject==3.48.2
-    # via gbulb
-    # via toga-gtk
-toga==0.4.5
-    # via pulsar-viewer
-toga-core==0.4.5
-    # via toga-gtk
-toga-gtk==0.4.5
-    # via toga
+pycairo==1.27.0
+pygobject==3.50.0
+toga==0.4.7
+toga-core==0.4.7
+toga-gtk==0.4.7
 travertino==0.3.0
-    # via toga-core

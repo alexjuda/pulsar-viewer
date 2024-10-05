@@ -30,6 +30,17 @@ Experimental. Proof of concept. UI improvements will come later if I confirm thi
 
 ## Installation
 
+System packages required on Fedora:
+
+```bash
+sudo dnf install gcc gobject-introspection-devel cairo-gobject-devel pkg-config python3-devel gtk4
+```
+
+Alternatively, check the [docs for installing pygobject](https://pygobject.gnome.org/getting_started.html).
+
+
+Project deps:
+
 ```bash
 rye sync
 ```
